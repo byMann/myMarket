@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:my_market_app/screen/customer/akun.dart';
+import 'package:my_market_app/screen/customer/detailproduk.dart';
+import 'package:my_market_app/screen/customer/homecustomer.dart';
+import 'package:my_market_app/screen/customer/kategori.dart';
+import 'package:my_market_app/screen/customer/pembelian.dart';
+import 'package:my_market_app/screen/customer/produksaya.dart';
+import 'package:my_market_app/screen/customer/tambahproduk.dart';
+import 'package:my_market_app/screen/login.dart';
 
 void main() {
   runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
 }
 
 class MyApp extends StatelessWidget {
@@ -11,7 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'myMarket App',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -30,7 +39,17 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'myMarket App'),
+      routes: {
+        'home': (context) => const HomeCustomer(),
+        'produksaya': (context) => const ProdukSaya(),
+        'akun': (context) => const Akun(),
+        'kategori': (context) => const Kategori(),
+        'pembelian': (context) => const Pembelian(),
+        'tambahproduk': (context) => const TambahProduk(),
+        'login': (context) => const Login(),
+        'detailproduk': (context) => const DetailProduk(),
+      },
     );
   }
 }
@@ -54,18 +73,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int _currentIndex = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  final List<Widget> _screens = [HomeCustomer(), ProdukSaya(), Akun()];
+  final List<String> _title = ['Home', 'Produk Saya', 'Akun'];
 
   @override
   Widget build(BuildContext context) {
@@ -83,40 +94,100 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(_title[_currentIndex]),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+      body: _screens[_currentIndex],
+      drawer: myDrawer(),
+      bottomNavigationBar: myButtonNavBar(),
+    );
+  }
+
+  Center myBody(BuildContext context) {
+    return Center(
+      // Center is a layout widget. It takes a single child and positions it
+      // in the middle of the parent.
+      child: Column(
+        // Column is also a layout widget. It takes a list of children and
+        // arranges them vertically. By default, it sizes itself to fit its
+        // children horizontally, and tries to be as tall as its parent.
+        //
+        // Column has various properties to control how it sizes itself and
+        // how it positions its children. Here we use mainAxisAlignment to
+        // center the children vertically; the main axis here is the vertical
+        // axis because Columns are vertical (the cross axis would be
+        // horizontal).
+        //
+        // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
+        // action in the IDE, or press "p" in the console), to see the
+        // wireframe for each widget.
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[const Text('Welcome to myMarket App')],
+      ),
+    );
+  }
+
+  BottomNavigationBar myButtonNavBar() {
+    return BottomNavigationBar(
+      currentIndex: _currentIndex,
+      fixedColor: Colors.purple,
+      items: const [
+        BottomNavigationBarItem(label: "Home", icon: Icon(Icons.home)),
+        BottomNavigationBarItem(
+          label: "Produk Saya",
+          icon: Icon(Icons.shopping_bag),
         ),
+        BottomNavigationBarItem(label: "Akun", icon: Icon(Icons.person)),
+      ],
+      onTap: (int index) {
+        setState(() {
+          _currentIndex = index;
+        });
+      },
+    );
+  }
+
+  Drawer myDrawer() {
+    return Drawer(
+      elevation: 16.0,
+      child: Column(
+        children: <Widget>[
+          UserAccountsDrawerHeader(
+            accountName: Text("Dummy"),
+            accountEmail: Text("dummy@gmail.com"),
+            currentAccountPicture: CircleAvatar(
+              backgroundImage: NetworkImage("https://i.pravatar.cc/150"),
+            ),
+          ),
+          ListTile(
+            title: const Text("Tambah Produk"),
+            leading: const Icon(Icons.add),
+            onTap: () {
+              Navigator.popAndPushNamed(context, "tambahproduk");
+            },
+          ),
+          ListTile(
+            title: const Text("Kategori"),
+            leading: const Icon(Icons.list),
+            onTap: () {
+              Navigator.popAndPushNamed(context, "kategori");
+            },
+          ),
+          ListTile(
+            title: const Text("Pembelian"),
+            leading: const Icon(Icons.attach_money_sharp),
+            onTap: () {
+              Navigator.popAndPushNamed(context, "pembelian");
+            },
+          ),
+          ListTile(
+            title: const Text("Logout"),
+            leading: const Icon(Icons.logout_outlined),
+            onTap: () {
+              // doLogout();
+            },
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
