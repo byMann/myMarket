@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_market_app/screen/chat.dart';
 import 'package:my_market_app/screen/customer/akun.dart';
 import 'package:my_market_app/screen/customer/detailproduk.dart';
 import 'package:my_market_app/screen/customer/homecustomer.dart';
@@ -7,6 +8,7 @@ import 'package:my_market_app/screen/customer/pembelian.dart';
 import 'package:my_market_app/screen/customer/produksaya.dart';
 import 'package:my_market_app/screen/customer/tambahproduk.dart';
 import 'package:my_market_app/screen/login.dart';
+import 'package:my_market_app/screen/register.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,14 +43,16 @@ class MyApp extends StatelessWidget {
       ),
       home: const MyHomePage(title: 'myMarket App'),
       routes: {
+        'login': (context) => const Login(),
+        'register': (context) => const Register(),
         'home': (context) => const HomeCustomer(),
         'produksaya': (context) => const ProdukSaya(),
         'akun': (context) => const Akun(),
         'kategori': (context) => const Kategori(),
         'pembelian': (context) => const Pembelian(),
         'tambahproduk': (context) => const TambahProduk(),
-        'login': (context) => const Login(),
         'detailproduk': (context) => const DetailProduk(),
+        'chat': (context) => const Chat(),
       },
     );
   }
@@ -177,6 +181,13 @@ class _MyHomePageState extends State<MyHomePage> {
             leading: const Icon(Icons.attach_money_sharp),
             onTap: () {
               Navigator.popAndPushNamed(context, "pembelian");
+            },
+          ),
+          ListTile(
+            title: const Text("Chat"),
+            leading: const Icon(Icons.chat),
+            onTap: () {
+              Navigator.popAndPushNamed(context, "chat");
             },
           ),
           ListTile(

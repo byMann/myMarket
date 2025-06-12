@@ -37,6 +37,8 @@ dependencies:
   percent_indicator: ^4.2.2
   shared_preferences: ^2.5.2
   http: ^1.4.0
+  # untuk fitur tambahan safety
+  bcrypt: ^1.1.3 
 
 dev_dependencies:
   flutter_test:
