@@ -100,7 +100,10 @@ class _DetailProdukScreenState extends State<DetailProduk> {
                       "Stok : " + _p!.stok.toString(),
                       style: const TextStyle(fontSize: 12),
                     ),
-
+                    Text(
+                      "Email Penjual : " + _p!.nama_penjual.toString(),
+                      style: const TextStyle(fontSize: 14),
+                    ),
                     const SizedBox(height: 10),
                     const Text("Kategori:", style: TextStyle(fontSize: 18)),
                     const SizedBox(height: 5),
