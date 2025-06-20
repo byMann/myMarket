@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_market_app/screen/pembeli/homecustomer.dart';
@@ -20,22 +19,29 @@ class MyLogin extends StatelessWidget {
 
 class Login extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return _LoginState();
-  }
+  State<StatefulWidget> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  String _email = "";
-  String _password = "";
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   String _error_login = "";
-  String? _selected_role;
   bool _eyePassword = true;
 
   void doLogin() async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      setState(() {
+        _error_login = "Seluruh field wajib diisi.";
+      });
+      return;
+    }
+
     final response = await http.post(
       Uri.parse("https://ubaya.xyz/flutter/160422065/project/login.php"),
-      body: {'email': _email, 'password': _password},
+      body: {'email': email, 'password': password},
     );
 
     if (response.statusCode == 200) {
@@ -60,7 +66,7 @@ class _LoginState extends State<Login> {
         }
       } else {
         setState(() {
-          _error_login = "Username atau password salah.";
+          _error_login = "Email atau password salah.";
         });
       }
     } else {
@@ -94,19 +100,18 @@ class _LoginState extends State<Login> {
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: TextField(
+                        controller: _emailController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Username',
+                          labelText: 'Email',
                           hintText: 'email@example.com',
                         ),
-                        onChanged: (email) {
-                          _email = email;
-                        },
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: TextField(
+                        controller: _passwordController,
                         obscureText: _eyePassword,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
@@ -125,12 +130,9 @@ class _LoginState extends State<Login> {
                             },
                           ),
                         ),
-                        onChanged: (passw) {
-                          _password = passw;
-                        },
                       ),
                     ),
-                    if (_error_login != "")
+                    if (_error_login.isNotEmpty)
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: Text(
@@ -144,9 +146,7 @@ class _LoginState extends State<Login> {
                         width: double.infinity,
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: () {
-                            doLogin();
-                          },
+                          onPressed: doLogin,
                           child: Text('Login', style: TextStyle(fontSize: 20)),
                         ),
                       ),
@@ -160,7 +160,7 @@ class _LoginState extends State<Login> {
                             MaterialPageRoute(builder: (context) => Register()),
                           );
                         },
-                        child: Text("Belum punya akun? Daftar di sini"),
+                        child: Text("Belum punya akun? Daftar"),
                       ),
                     ),
                   ],
