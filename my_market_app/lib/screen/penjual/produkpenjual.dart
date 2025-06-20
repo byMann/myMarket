@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Chat extends StatefulWidget {
-  const Chat({super.key});
+class ProdukPenjual extends StatefulWidget {
+  const ProdukPenjual({super.key});
 
   @override
-  _ChatScreenState createState() => _ChatScreenState();
+  _ProdukPenjualScreenState createState() => _ProdukPenjualScreenState();
 }
 
-class _ChatScreenState extends State<Chat> {
+class _ProdukPenjualScreenState extends State<ProdukPenjual> {
 
   @override
   void initState() {
@@ -17,12 +17,12 @@ class _ChatScreenState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Ini Chat")),
+      // appBar: AppBar(title: const Text("Produk Saya")),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Ini Chat")
+            Text("Ini Produk Saya")
           ],
         ),
       ),

@@ -2,7 +2,7 @@ class Produk {
   int id;
   String nama;
   String deskripsi;
-  double harga;
+  int harga;
   int stok;
   String gambar;
   List? kategori;
@@ -19,13 +19,13 @@ class Produk {
 
   factory Produk.fromJson(Map<String, dynamic> json) {
     return Produk(
-      id: json['product_id'] as int,
-      nama: json['nama'] as String,
-      deskripsi: json['deskripsi'] as String,
-      harga: json['harga'] != null ? json['harga'] : '0.0',
-      stok: json['stok'] != null ? json['stok'] : '0',
-      gambar: json['image'] as String,
-      kategori: json['kategori'],
+      id: int.tryParse(json['id'].toString()) ?? 0,
+      nama: json['nama'] ?? '',
+      deskripsi: json['deskripsi'] ?? '',
+      harga: int.tryParse(json['harga'].toString()) ?? 0,
+      stok: int.tryParse(json['stok'].toString()) ?? 0,
+      gambar: json['gambar'] ?? '',
+      kategori: json['kategoris'] ?? [],
     );
   }
 }

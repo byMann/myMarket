@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Kategori extends StatefulWidget {
-  const Kategori({super.key});
+class AkunCust extends StatefulWidget {
+  const AkunCust({super.key});
 
   @override
-  _KategoriScreenState createState() => _KategoriScreenState();
+  _AkunCustScreenState createState() => _AkunCustScreenState();
 }
 
-class _KategoriScreenState extends State<Kategori> {
+class _AkunCustScreenState extends State<AkunCust> {
 
   @override
   void initState() {
@@ -17,12 +17,11 @@ class _KategoriScreenState extends State<Kategori> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Kategori")),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Ini Kategori")
+            Text("Ini Akun Cust")
           ],
         ),
       ),
