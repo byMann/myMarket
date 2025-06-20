@@ -1,12 +1,12 @@
 class Pengguna {
   int id;
-  String username;
+  String email;
   String passwordHash;
   String role;
 
   Pengguna({
     required this.id,
-    required this.username,
+    required this.email,
     required this.passwordHash,
     required this.role,
   });
@@ -14,7 +14,7 @@ class Pengguna {
   factory Pengguna.fromJson(Map<String, dynamic> json) {
     return Pengguna(
       id: json['id'] as int,
-      username: json['username'] as String,
+      email: json['email'] as String,
       passwordHash: json['password'] as String,
       role: json['role'] as String,
     );
