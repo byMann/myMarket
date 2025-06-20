@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:my_market_app/screen/chat.dart';
-import 'package:my_market_app/screen/customer/akun.dart';
-import 'package:my_market_app/screen/customer/detailproduk.dart';
-import 'package:my_market_app/screen/customer/homecustomer.dart';
-import 'package:my_market_app/screen/customer/kategori.dart';
-import 'package:my_market_app/screen/customer/pembelian.dart';
-import 'package:my_market_app/screen/customer/produksaya.dart';
-import 'package:my_market_app/screen/customer/tambahproduk.dart';
+import 'package:my_market_app/screen/pembeli/akun.dart';
+import 'package:my_market_app/screen/pembeli/detailproduk.dart';
+import 'package:my_market_app/screen/pembeli/homecustomer.dart';
+import 'package:my_market_app/screen/pembeli/kategori.dart';
+import 'package:my_market_app/screen/pembeli/pembelian.dart';
+import 'package:my_market_app/screen/pembeli/produksaya.dart';
+import 'package:my_market_app/screen/pembeli/tambahproduk.dart';
 import 'package:my_market_app/screen/login.dart';
 import 'package:my_market_app/screen/register.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyLogin());
   WidgetsFlutterBinding.ensureInitialized();
 }
 
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const MyHomePage(title: 'myMarket App'),
       routes: {
-        'login': (context) => const Login(),
+        'login': (context) => MyLogin(),
         'register': (context) => const Register(),
         'home': (context) => const HomeCustomer(),
         'produksaya': (context) => const ProdukSaya(),
