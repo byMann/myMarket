@@ -9,7 +9,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-
 class HomeCustomer extends StatefulWidget {
   const HomeCustomer({super.key});
 
@@ -19,7 +18,9 @@ class HomeCustomer extends StatefulWidget {
 
 class _HomeCustomerState extends State<HomeCustomer> {
   int _currentIndex = 0;
-  String _txtcari = "";
+  List<Map<String, dynamic>> kategoris = [];
+  String? selectedKategoriId;
+
   List<Produk> Ps = [];
   final dbHelper = DatabaseHelper.instance;
 
@@ -27,6 +28,25 @@ class _HomeCustomerState extends State<HomeCustomer> {
   void initState() {
     super.initState();
     baca_data();
+    loadKategori();
+  }
+
+  void loadKategori() async {
+    final response = await http.get(
+      Uri.parse("https://ubaya.xyz/flutter/160422065/project/listcategory.php"),
+    );
+    if (response.statusCode == 200) {
+      Map json = jsonDecode(response.body);
+      if (json['result'] == 'success') {
+        setState(() {
+          kategoris = List<Map<String, dynamic>>.from(json['data']);
+          if (kategoris.isNotEmpty) {
+            selectedKategoriId = kategoris[0]['id'].toString();
+          }
+          baca_data();
+        });
+      }
+    }
   }
 
   void baca_data() async {
@@ -35,7 +55,7 @@ class _HomeCustomerState extends State<HomeCustomer> {
         Uri.parse(
           "https://ubaya.xyz/flutter/160422065/project/listproduct.php",
         ),
-        body: {'cari': _txtcari},
+        body: {'kategori_id': selectedKategoriId ?? '0'},
       );
       if (response.statusCode == 200) {
         Map json = jsonDecode(response.body);
@@ -69,13 +89,22 @@ class _HomeCustomerState extends State<HomeCustomer> {
     return ListView(
       padding: const EdgeInsets.all(10),
       children: [
-        TextFormField(
-          decoration: const InputDecoration(
-            icon: Icon(Icons.search),
-            labelText: 'Cari Produk',
-          ),
-          onFieldSubmitted: (value) {
-            _txtcari = value;
+        Text("Filter berdasarkan kategori:"),
+        DropdownButton<String>(
+          value: selectedKategoriId,
+          hint: Text("Pilih Kategori"),
+          isExpanded: true,
+          items:
+              kategoris.map((kat) {
+                return DropdownMenuItem<String>(
+                  value: kat['id'].toString(),
+                  child: Text(kat['nama']),
+                );
+              }).toList(),
+          onChanged: (newVal) {
+            setState(() {
+              selectedKategoriId = newVal;
+            });
             baca_data();
           },
         ),
