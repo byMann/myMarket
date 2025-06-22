@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_market_app/screen/pembeli/akuncust.dart';
+import 'package:my_market_app/screen/pembeli/viewcart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Auth
@@ -8,7 +9,6 @@ import 'package:my_market_app/screen/register.dart';
 
 // Pembeli
 import 'package:my_market_app/screen/pembeli/homecustomer.dart';
-import 'package:my_market_app/screen/pembeli/detailproduk.dart';
 import 'package:my_market_app/screen/pembeli/pembelian.dart';
 import 'package:my_market_app/screen/pembeli/chatpembeli.dart';
 
@@ -63,6 +63,7 @@ class MyApp extends StatelessWidget {
         'akunpembeli': (context) => const AkunCust(),
         'pembelian': (context) => const Pembelian(),
         'chatpembeli': (context) => const ChatPembeli(),
+        'cart': (context) => const ViewCart(),
 
         // Penjual
         'homepenjual': (context) => const HomePenjual(),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_market_app/class/cart.dart';
+import 'package:my_market_app/helper/cart.dart';
 import 'package:my_market_app/class/produk.dart';
 import 'package:my_market_app/screen/pembeli/akuncust.dart';
 import 'package:my_market_app/screen/pembeli/chatpembeli.dart';
@@ -72,17 +72,50 @@ class _HomeCustomerState extends State<HomeCustomer> {
     }
   }
 
-  void addCart(int produkId, String title) async {
-    Map<String, dynamic> row = {
-      'produk_id': produkId,
-      'title': title,
-      'jumlah': 1,
-    };
-    await dbHelper.addCart(row);
-    if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('Sukses menambah produk')));
+  void addCart(int produkId, String nama, int harga) async {
+    try {
+      final response = await http.post(
+        Uri.parse("https://ubaya.xyz/flutter/160422065/project/cekstok.php"),
+        body: {'produk_id': produkId.toString()},
+      );
+
+      final json = jsonDecode(response.body);
+      print("DEBUG response JSON: $json");
+
+      if (json['result'] == 'success') {
+        int stokTersedia = int.parse(json['stok'].toString());
+        var existingItem = await dbHelper.getCartItem(produkId);
+        int jumlahLokal =
+            int.tryParse(existingItem?['jumlah'].toString() ?? '0') ?? 0;
+
+        if (jumlahLokal < stokTersedia) {
+          Map<String, dynamic> row = {
+            'produk_id': produkId,
+            'nama': nama,
+            'jumlah': 1,
+            'harga': harga,
+          };
+          await dbHelper.addCart(row);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Sukses menambah produk')),
+          );
+        } else {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Stok tidak mencukupi')));
+        }
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Produk tidak ditemukan')));
+      }
+    } catch (e, stack) {
+      print("🔥 ERROR addCart: $e");
+      print("🧱 STACK: $stack");
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Terjadi error: $e')));
+    }
   }
 
   Widget buildListProduk() {
@@ -142,7 +175,12 @@ class _HomeCustomerState extends State<HomeCustomer> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: ElevatedButton(
-                            onPressed: () => addCart(produk.id, produk.nama),
+                            onPressed:
+                                () => addCart(
+                                  produk.id,
+                                  produk.nama,
+                                  produk.harga,
+                                ),
                             child: const Text("Add to Cart"),
                           ),
                         ),
@@ -205,9 +243,9 @@ class _HomeCustomerState extends State<HomeCustomer> {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.attach_money),
-            title: const Text("Pembelian"),
-            onTap: () => Navigator.pushNamed(context, "pembelian"),
+            leading: const Icon(Icons.shopping_cart),
+            title: const Text("Cart"),
+            onTap: () => Navigator.pushNamed(context, "cart"),
           ),
           ListTile(
             leading: const Icon(Icons.logout),

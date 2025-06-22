@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_market_app/class/produk.dart';
-import 'package:my_market_app/screen/penjual/editproduk.dart';
 import 'package:intl/intl.dart';
 
 class DetailProduk extends StatefulWidget {
