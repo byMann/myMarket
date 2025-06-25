@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:my_market_app/screen/pembeli/homecustomer.dart';
 import 'package:my_market_app/screen/penjual/homepenjual.dart';
 import 'package:my_market_app/screen/register.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:my_market_app/helper/user_helper.dart';
 
 class MyLogin extends StatelessWidget {
   @override
@@ -47,11 +47,16 @@ class _LoginState extends State<Login> {
     if (response.statusCode == 200) {
       Map json = jsonDecode(response.body);
       if (json['result'] == 'success') {
-        final prefs = await SharedPreferences.getInstance();
-        prefs.setInt("id", json['id']);
-        prefs.setString("email", json['email']);
-        prefs.setString("role", json['role']);
-        prefs.setBool("is_logged_in", true);
+        // final prefs = await SharedPreferences.getInstance();
+        // prefs.setInt("id", json['id']);
+        // prefs.setString("email", json['email']);
+        // prefs.setString("role", json['role']);
+        // prefs.setBool("is_logged_in", true);
+
+        await saveUserSession(
+          userId: json['id'].toString(), 
+          role: json['role'],
+        );
 
         if (json['role'] == 'penjual') {
           Navigator.pushReplacement(

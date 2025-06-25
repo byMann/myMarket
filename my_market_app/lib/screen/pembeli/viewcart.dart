@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:my_market_app/helper/cart.dart';
 import 'package:my_market_app/helper/user_helper.dart';
 import 'package:intl/intl.dart';
+import 'package:my_market_app/helper/user_helper.dart' as user_helper;
 
 
 class ViewCart extends StatefulWidget {
@@ -118,7 +119,7 @@ class _ViewCartState extends State<ViewCart> {
       items += "$produkId,$jumlah,$totalHarga|";
     });
 
-    String activeUser = await checkUser(); // return user_id
+    String activeUser = await user_helper.getUserId(); // return user_id
 
     final response = await http.post(
       Uri.parse("https://ubaya.xyz/flutter/160422065/project/checkout.php"),

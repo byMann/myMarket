@@ -109,9 +109,7 @@ class _HomeCustomerState extends State<HomeCustomer> {
           context,
         ).showSnackBar(SnackBar(content: Text('Produk tidak ditemukan')));
       }
-    } catch (e, stack) {
-      print("🔥 ERROR addCart: $e");
-      print("🧱 STACK: $stack");
+    } catch (e) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Terjadi error: $e')));

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_market_app/helper/user_helper.dart' as user_helper;
 import 'package:my_market_app/screen/pembeli/akuncust.dart';
 import 'package:my_market_app/screen/pembeli/viewcart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,13 +22,11 @@ import 'package:my_market_app/screen/penjual/chatpenjual.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final prefs = await SharedPreferences.getInstance();
 
-  bool isLoggedIn = prefs.getBool("is_logged_in") ?? false;
-  String role = prefs.getString("role") ?? "";
+  bool isLoggedIn = await user_helper.isLoggedIn();
+  String role = await user_helper.getUserRole();
 
   Widget homeWidget;
-
   if (!isLoggedIn) {
     homeWidget = Login();
   } else if (role == "penjual") {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_market_app/class/produk.dart';
 import 'package:my_market_app/helper/user_helper.dart';
+import 'package:my_market_app/helper/user_helper.dart' as user_helper;
 
 class ProdukPenjual extends StatefulWidget {
   const ProdukPenjual({super.key});
@@ -13,14 +14,17 @@ class ProdukPenjual extends StatefulWidget {
 }
 
 class _ProdukPenjualScreenState extends State<ProdukPenjual> {
-  
   List<Produk> Produks = [];
   String _txtcari = '';
+  String activeUser = '';
 
   Future<String> fetchData() async {
+    activeUser = await user_helper.getUserId(); // return user_id
+    setState(() {});
+
     final response = await http.post(
       Uri.parse("https://ubaya.xyz/flutter/160422065/project/listproduct.php"),
-      body: {'cari':_txtcari ,'user_id': checkUser()},
+      body: {'cari': _txtcari, 'user_id': activeUser},
     );
     if (response.statusCode == 200) {
       return response.body;
@@ -126,6 +130,7 @@ class _ProdukPenjualScreenState extends State<ProdukPenjual> {
                     ? DaftarProduk(Produks)
                     : Text('tidak ada data'),
           ),
+          Text("active user : $activeUser")
         ],
       ),
     );
