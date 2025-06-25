@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_market_app/helper/user_helper.dart' as user_helper;
 import 'package:my_market_app/screen/pembeli/akuncust.dart';
 import 'package:my_market_app/screen/pembeli/viewcart.dart';
+import 'package:my_market_app/screen/penjual/tambahproduk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Auth
@@ -70,6 +71,7 @@ class MyApp extends StatelessWidget {
         'kategori_penjual': (context) => const KategoriPenjual(),
         'akunpenjual': (context) => const AkunPenjual(),
         'chatpenjual': (context) => const ChatPenjual(),
+        'tambahproduk': (context) => const TambahProduk(),
       },
     );
   }

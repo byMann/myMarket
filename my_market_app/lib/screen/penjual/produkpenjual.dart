@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:my_market_app/class/produk.dart';
 import 'package:my_market_app/helper/user_helper.dart';
 import 'package:my_market_app/helper/user_helper.dart' as user_helper;
+import 'package:my_market_app/screen/penjual/editproduk.dart';
 
 class ProdukPenjual extends StatefulWidget {
   const ProdukPenjual({super.key});
@@ -19,7 +20,7 @@ class _ProdukPenjualScreenState extends State<ProdukPenjual> {
   String activeUser = '';
 
   Future<String> fetchData() async {
-    activeUser = await user_helper.getUserId(); // return user_id
+    activeUser = await user_helper.getUserId();
     setState(() {});
 
     final response = await http.post(
@@ -66,13 +67,14 @@ class _ProdukPenjualScreenState extends State<ProdukPenjual> {
                   title: GestureDetector(
                     child: Text(Produks[index].nama),
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder:
-                      //         (context) => DetailPop(movieID: PMs[index].id),
-                      //   ),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) =>
+                                  EditProduk(produkID: Produks[index].id),
+                        ),
+                      );
                     },
                   ),
                   // subtitle: Text(PopMovs[index].overview),
@@ -99,6 +101,7 @@ class _ProdukPenjualScreenState extends State<ProdukPenjual> {
       return const CircularProgressIndicator();
     }
   }
+
 
   @override
   void initState() {
@@ -128,9 +131,8 @@ class _ProdukPenjualScreenState extends State<ProdukPenjual> {
             child:
                 Produks.length > 0
                     ? DaftarProduk(Produks)
-                    : Text('tidak ada data'),
+                    : Text('Anda belum mempunyai produk'),
           ),
-          Text("active user : $activeUser")
         ],
       ),
     );

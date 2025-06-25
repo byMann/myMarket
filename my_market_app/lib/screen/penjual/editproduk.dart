@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_market_app/class/kategori.dart';
 import 'package:my_market_app/class/produk.dart';
+import 'package:my_market_app/screen/penjual/produkpenjual.dart';
 
 class EditProduk extends StatefulWidget {
   int produkID;
@@ -142,8 +143,34 @@ class EditProdukState extends State<EditProduk> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Sukses mengubah Data')));
-        Navigator.pushNamed(context, 'produk');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProdukPenjual()),
+        );
       }
+    }
+  }
+
+  void delete() async {
+    final response = await http.post(
+      Uri.parse("https://ubaya.xyz/flutter/160422065/project/deleteproduct.php"),
+      body: {'id': widget.produkID.toString()},
+    );
+    if (response.statusCode == 200) {
+      Map json = jsonDecode(response.body);
+      if (json['result'] == 'success') {
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Sukses Menghapus Data')));
+
+        Navigator.pushNamed(context, 'homepenjual');
+      }
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error')));
+      throw Exception('Failed to read API');
     }
   }
 
@@ -311,6 +338,26 @@ class EditProdukState extends State<EditProduk> {
                   child: Text("Upload Gambar"),
                 ),
               ],
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () {
+                    if (_formKey.currentState != null &&
+                        !_formKey.currentState!.validate()) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Harap Isian diperbaiki')),
+                      );
+                    } else {
+                      delete();
+                    }
+                  },
+                  child: Text('DELETE PRODUK'),
+                ),
+              ),
             ],
           ),
         ),
