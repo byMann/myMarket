@@ -4,7 +4,6 @@ class Produk {
   String deskripsi;
   int harga;
   int stok;
-  String gambar;
   String nama_penjual;
   List? kategori;
 
@@ -14,7 +13,6 @@ class Produk {
     required this.deskripsi,
     required this.harga,
     required this.stok,
-    required this.gambar,
     required this.nama_penjual,
     this.kategori,
   });
@@ -26,7 +24,6 @@ class Produk {
       deskripsi: json['deskripsi'] ?? '',
       harga: int.tryParse(json['harga'].toString()) ?? 0,
       stok: int.tryParse(json['stok'].toString()) ?? 0,
-      gambar: json['gambar'] ?? '',
       nama_penjual: json['nama_penjual'] ?? '',
       kategori: json['kategoris'] ?? [],
     );

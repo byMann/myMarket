@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:my_market_app/helper/user_helper.dart';
 import 'package:my_market_app/screen/penjual/akunpenjual.dart';
 import 'package:my_market_app/screen/penjual/chatpenjual.dart';
 import 'package:my_market_app/screen/penjual/kategoripenjual.dart';
 import 'package:my_market_app/screen/penjual/produkpenjual.dart';
 import 'package:my_market_app/screen/penjual/tambahproduk.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePenjual extends StatefulWidget {
   const HomePenjual({super.key});
@@ -21,10 +22,16 @@ class _HomePenjualState extends State<HomePenjual> {
     KategoriPenjual(),
     AkunPenjual(),
     ChatPenjual(),
-    TambahProduk()
+    TambahProduk(),
   ];
 
-  final List<String> _titles = ["Produk Saya", "Kategori", "Akun", "Chat", "Tambah Produk"];
+  final List<String> _titles = [
+    "Produk Saya",
+    "Kategori",
+    "Akun",
+    "Chat",
+    "Tambah Produk",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +41,9 @@ class _HomePenjualState extends State<HomePenjual> {
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
+        backgroundColor: Colors.purple,
+        selectedItemColor: Colors.purple,
+        unselectedItemColor: Colors.grey,
         onTap: (index) => setState(() => _currentIndex = index),
         items: const [
           BottomNavigationBarItem(
@@ -64,22 +74,25 @@ class _HomePenjualState extends State<HomePenjual> {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.add),
             title: Text("Tambah Produk"),
             onTap: () => Navigator.pushNamed(context, "tambahproduk"),
           ),
           ListTile(
+            leading: const Icon(Icons.chat),
             title: Text("Chat"),
             onTap: () => Navigator.pushNamed(context, "chatpenjual"),
           ),
-          ListTile(title: Text("Logout"), onTap: () => doLogout()),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: Text("Logout"),
+            onTap: () async {
+              await clearSession();
+              Navigator.pushReplacementNamed(context, 'login');
+            },
+          ),
         ],
       ),
     );
-  }
-
-  void doLogout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    Navigator.pushReplacementNamed(context, 'login');
   }
 }

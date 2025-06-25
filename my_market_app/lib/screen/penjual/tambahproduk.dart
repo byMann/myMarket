@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -18,12 +17,10 @@ class _TambahProdukScreenState extends State<TambahProduk> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameCont = TextEditingController();
   final TextEditingController _descCont = TextEditingController();
-  TextEditingController _hargaCont = TextEditingController();
-  TextEditingController _stokCont = TextEditingController();
-  Widget comboKategori = Text('tambah kategori');
+  final TextEditingController _hargaCont = TextEditingController();
+  final TextEditingController _stokCont = TextEditingController();
 
   List<Map<String, dynamic>> _kategoriList = [];
-
   Uint8List? _imageBytes;
 
   @override
@@ -33,50 +30,64 @@ class _TambahProdukScreenState extends State<TambahProduk> {
   }
 
   void submit() async {
-    final response = await http.post(
-      Uri.parse("https://ubaya.xyz/flutter/160422065/project/addproduct.php"),
-      body: {
-        'nama': _nameCont.text,
-        'deskripsi': _descCont.text,
-        'harga': _hargaCont.text,
-        'stok': _stokCont.text,
-        'gambar': '',
-        'id_penjual': (await user_helper.getUserId()).toString(),
-      },
-    );
+    if (_formKey.currentState?.validate() ?? false) {
+      final response = await http.post(
+        Uri.parse("https://ubaya.xyz/flutter/160422065/project/addproduct.php"),
+        body: {
+          'nama': _nameCont.text,
+          'deskripsi': _descCont.text,
+          'harga': _hargaCont.text,
+          'stok': _stokCont.text,
+          'id_penjual': (await user_helper.getUserId()).toString(),
+        },
+      );
 
-    if (response.statusCode == 200) {
-      Map json = jsonDecode(response.body);
-      if (json['result'] == 'success') {
-        int produkID = json['id'];
+      if (response.statusCode == 200) {
+        Map json = jsonDecode(response.body);
+        if (json['result'] == 'success') {
+          int produkID = json['id'];
 
-        uploadGambarProduk(produkID);
-
-        for (var kat in _kategoriList) {
-          if (kat['selected']) {
-            await http.post(
-              Uri.parse(
-                "https://ubaya.xyz/flutter/160422065/project/addproductcategory.php",
-              ),
-              body: {
-                'product_id': produkID.toString(),
-                'kategori_id': kat['id'].toString(),
-              },
-            );
+          if (_imageBytes != null) {
+            uploadGambarProduk(produkID);
           }
-        }
 
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Produk berhasil ditambahkan')));
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => ProdukPenjual()),
-        );
+          await addCategories(produkID);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Produk berhasil ditambahkan')),
+          );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => ProdukPenjual()),
+          );
+        } else {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Gagal menambahkan produk')));
+        }
       } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Gagal menambahkan produk')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal menambahkan produk, coba lagi')),
+        );
+      }
+    }
+  }
+
+  Future<void> addCategories(int produkID) async {
+    for (var kat in _kategoriList) {
+      if (kat['selected']) {
+        final response = await http.post(
+          Uri.parse(
+            "https://ubaya.xyz/flutter/160422065/project/addproductcategory.php",
+          ),
+          body: {
+            'product_id': produkID.toString(),
+            'kategori_id': kat['id'].toString(),
+          },
+        );
+        if (response.statusCode != 200) {
+          print('Failed to add category: ${kat['nama']}');
+        }
       }
     }
   }
@@ -104,12 +115,13 @@ class _TambahProdukScreenState extends State<TambahProduk> {
 
   void uploadGambarProduk(int produkID) async {
     if (_imageBytes == null) return;
+
     String base64Image = base64Encode(_imageBytes!);
     final response = await http.post(
       Uri.parse(
         "https://ubaya.xyz/flutter/160422065/project/uploadgambarproduk.php",
       ),
-      body: {'produk_id': produkID.toString(), 'image': base64Image},
+      body: {'produk_id': produkID.toString(), 'gambar': base64Image},
     );
 
     if (response.statusCode == 200) {
@@ -117,6 +129,10 @@ class _TambahProdukScreenState extends State<TambahProduk> {
       if (json['result'] == 'success') {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Sukses mengupload Gambar Produk')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal mengupload Gambar Produk')),
         );
       }
     }
@@ -186,7 +202,7 @@ class _TambahProdukScreenState extends State<TambahProduk> {
                 validator:
                     (value) =>
                         value == null || value.isEmpty
-                            ? 'nama harus diisi'
+                            ? 'Nama harus diisi'
                             : null,
               ),
               TextFormField(
@@ -202,7 +218,7 @@ class _TambahProdukScreenState extends State<TambahProduk> {
                 validator:
                     (value) =>
                         value == null || value.isEmpty
-                            ? 'harga harus diisi'
+                            ? 'Harga harus diisi'
                             : null,
               ),
               TextFormField(
@@ -212,7 +228,7 @@ class _TambahProdukScreenState extends State<TambahProduk> {
                 validator:
                     (value) =>
                         value == null || value.isEmpty
-                            ? 'stok harus diisi'
+                            ? 'Stok harus diisi'
                             : null,
               ),
               const SizedBox(height: 20),
@@ -223,7 +239,7 @@ class _TambahProdukScreenState extends State<TambahProduk> {
                   value: kat['selected'],
                   onChanged: (value) {
                     setState(() {
-                      kat['selected'] = value;
+                      kat['selected'] = value!;
                     });
                   },
                 );
@@ -236,24 +252,9 @@ class _TambahProdukScreenState extends State<TambahProduk> {
               if (_imageBytes != null) ...[
                 Image.memory(_imageBytes!, height: 200),
                 const SizedBox(height: 10),
-                // ElevatedButton(
-                //   onPressed: uploadScene64,
-                //   child: Text("Upload Gambar"),
-                // ),
               ],
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    submit();
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Harap perbaiki isian')),
-                    );
-                  }
-                },
-                child: Text('Submit'),
-              ),
+              ElevatedButton(onPressed: submit, child: Text('Submit')),
             ],
           ),
         ),

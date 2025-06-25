@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:my_market_app/helper/cart.dart';
 import 'package:my_market_app/class/produk.dart';
+import 'package:my_market_app/helper/user_helper.dart';
 import 'package:my_market_app/screen/pembeli/akuncust.dart';
 import 'package:my_market_app/screen/pembeli/chatpembeli.dart';
 import 'package:my_market_app/screen/pembeli/detailproduk.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -149,14 +149,11 @@ class _HomeCustomerState extends State<HomeCustomer> {
                 final produk = Ps[index];
                 return Card(
                   child: ListTile(
-                    leading:
-                        produk.gambar != ""
-                            ? Image.network(
-                              produk.gambar,
-                              width: 50,
-                              height: 50,
-                            )
-                            : const Icon(Icons.shopping_bag),
+                    leading: Image.network(
+                      'http://ubaya.xyz/images/produk/${produk.id}.jpg',
+                      height: 200,
+                    ),
+                    // : const Icon(Icons.shopping_bag),
                     title: Text(produk.nama),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,6 +215,9 @@ class _HomeCustomerState extends State<HomeCustomer> {
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
+        backgroundColor: Colors.white,
+        selectedItemColor: Colors.purple,
+        unselectedItemColor: Colors.grey,
         onTap: (index) => setState(() => _currentIndex = index),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Beranda"),
@@ -248,16 +248,13 @@ class _HomeCustomerState extends State<HomeCustomer> {
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text("Logout"),
-            onTap: () => doLogout(),
+            onTap: () async {
+              await clearSession();
+              Navigator.pushReplacementNamed(context, 'login');
+            },
           ),
         ],
       ),
     );
-  }
-
-  void doLogout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    Navigator.pushReplacementNamed(context, 'login');
   }
 }

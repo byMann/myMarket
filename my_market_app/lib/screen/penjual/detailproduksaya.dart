@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_market_app/class/produk.dart';
 import 'package:intl/intl.dart';
+import 'package:my_market_app/screen/penjual/editproduk.dart';
 
-class DetailProduk extends StatefulWidget {
+class DetailProdukSaya extends StatefulWidget {
   final int produkID;
 
-  const DetailProduk({super.key, required this.produkID});
+  const DetailProdukSaya({super.key, required this.produkID});
 
   @override
-  State<DetailProduk> createState() => _DetailProdukScreenState();
+  State<DetailProdukSaya> createState() => _DetailProdukSayaScreenState();
 }
 
-class _DetailProdukScreenState extends State<DetailProduk> {
+class _DetailProdukSayaScreenState extends State<DetailProdukSaya> {
   Produk? _p;
 
   @override
@@ -44,6 +45,25 @@ class _DetailProdukScreenState extends State<DetailProduk> {
     }
   }
 
+  Future<void> deleteProduct() async {
+    final response = await http.post(
+      Uri.parse(
+        "https://ubaya.xyz/flutter/160422065/project/deleteproduct.php",
+      ),
+      body: {'id': widget.produkID.toString()},
+    );
+
+    if (response.statusCode == 200) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Sukses Menghapus Produk')));
+      Navigator.pushReplacementNamed(context, 'produk');
+    } else {
+      throw Exception('Gagal menghapus produk');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,12 +76,10 @@ class _DetailProdukScreenState extends State<DetailProduk> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (_p!.id != null)
-                      Image.network(
-                        'http://ubaya.xyz/images/produk/${_p!.id}.jpg',
-                        height: 200,
-                      ),
-                    const SizedBox(height: 10),
+                    Image.network(
+                      'https://ubaya.xyz/flutter/160422065/project/images/produk/${_p?.id}.jpg',
+                      height: 200,
+                    ),
                     Text(
                       _p!.nama,
                       style: const TextStyle(
@@ -101,6 +119,33 @@ class _DetailProdukScreenState extends State<DetailProduk> {
                     else
                       const Text("Belum ada kategori"),
                     const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => EditProduk(produkID: _p!.id),
+                          ),
+                        );
+                      },
+                      child: const Text("Edit"),
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.red,
+                      ),
+                      // onPressed: () => ,
+                      onPressed: () async {
+                        deleteProduct();
+                        Navigator.pushReplacementNamed(
+                          context,
+                          'produk_penjual',
+                        );
+                      },
+                      child: const Text("Hapus Produk"),
+                    ),
                   ],
                 ),
               ),

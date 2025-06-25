@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_market_app/class/kategori.dart';
 import 'package:my_market_app/class/produk.dart';
@@ -112,14 +111,19 @@ class EditProdukState extends State<EditProduk> {
       Uri.parse(
         "https://ubaya.xyz/flutter/160422065/project/deleteprodcat.php",
       ),
-      body: {'id': widget.produkID.toString(), 'kategori_name': kategoriNama},
+      body: {
+        'product_id': widget.produkID.toString(),
+        'kategori_nama': kategoriNama,
+      },
     );
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Sukses Menghapus Kategori')));
-      bacaData();
+      setState(() {
+        bacaData();
+      });
     }
   }
 
@@ -137,9 +141,15 @@ class EditProdukState extends State<EditProduk> {
       },
     );
 
+    print("Response status: ${response.statusCode}");
     if (response.statusCode == 200) {
       Map json = jsonDecode(response.body);
       if (json['result'] == 'success') {
+        int produkID = json['id'];
+
+        if (_imageBytes != null) {
+          uploadGambarProduk(produkID);
+        }
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Sukses mengubah Data')));
@@ -147,13 +157,23 @@ class EditProdukState extends State<EditProduk> {
           context,
           MaterialPageRoute(builder: (context) => ProdukPenjual()),
         );
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: ${json['message']}')));
       }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Server Error: ${response.statusCode}')),
+      );
     }
   }
 
   void delete() async {
     final response = await http.post(
-      Uri.parse("https://ubaya.xyz/flutter/160422065/project/deleteproduct.php"),
+      Uri.parse(
+        "https://ubaya.xyz/flutter/160422065/project/deleteproduct.php",
+      ),
       body: {'id': widget.produkID.toString()},
     );
     if (response.statusCode == 200) {
@@ -165,6 +185,9 @@ class EditProdukState extends State<EditProduk> {
         ).showSnackBar(SnackBar(content: Text('Sukses Menghapus Data')));
 
         Navigator.pushNamed(context, 'homepenjual');
+        setState(() {
+          bacaData();
+        });
       }
     } else {
       ScaffoldMessenger.of(
@@ -174,23 +197,27 @@ class EditProdukState extends State<EditProduk> {
     }
   }
 
-  void uploadScene64() async {
+  void uploadGambarProduk(int produkID) async {
     if (_imageBytes == null) return;
+
     String base64Image = base64Encode(_imageBytes!);
     final response = await http.post(
       Uri.parse(
         "https://ubaya.xyz/flutter/160422065/project/uploadgambarproduk.php",
       ),
-      body: {'produk_id': widget.produkID.toString(), 'image': base64Image},
+      body: {'produk_id': produkID.toString(), 'gambar': base64Image},
     );
 
     if (response.statusCode == 200) {
       Map json = jsonDecode(response.body);
       if (json['result'] == 'success') {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Sukses mengupload Gambar Produk')),
+          SnackBar(content: Text('Sukses mengubah Gambar Produk')),
         );
-        bacaData();
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Gagal mengubah Gambar Produk')));
       }
     }
   }
@@ -312,18 +339,10 @@ class EditProdukState extends State<EditProduk> {
               comboKategori,
               const SizedBox(height: 10),
               if (_p != null) generateKategoris(),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    submit();
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Harap perbaiki isian')),
-                    );
-                  }
-                },
-                child: Text('Submit'),
+              const SizedBox(height: 20),
+              Image.network(
+                'http://ubaya.xyz/flutter/160422065/project/images/produk/${_p?.id}.jpg',
+                height: 200,
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -333,30 +352,20 @@ class EditProdukState extends State<EditProduk> {
               if (_imageBytes != null) ...[
                 Image.memory(_imageBytes!, height: 200),
                 const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: uploadScene64,
-                  child: Text("Upload Gambar"),
-                ),
               ],
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState != null &&
-                        !_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Harap Isian diperbaiki')),
-                      );
-                    } else {
-                      delete();
-                    }
-                  },
-                  child: Text('DELETE PRODUK'),
-                ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () async {
+                  if (_formKey.currentState?.validate() ?? false) {
+                    submit();
+                    Navigator.pushReplacementNamed(context, 'produk_penjual');
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Harap perbaiki isian')),
+                    );
+                  }
+                },
+                child: Text('Submit'),
               ),
             ],
           ),

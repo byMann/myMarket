@@ -3,9 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_market_app/class/produk.dart';
-import 'package:my_market_app/helper/user_helper.dart';
 import 'package:my_market_app/helper/user_helper.dart' as user_helper;
-import 'package:my_market_app/screen/penjual/editproduk.dart';
+import 'package:my_market_app/screen/penjual/detailproduksaya.dart';
 
 class ProdukPenjual extends StatefulWidget {
   const ProdukPenjual({super.key});
@@ -55,15 +54,15 @@ class _ProdukPenjualScreenState extends State<ProdukPenjual> {
       return ListView.builder(
         itemCount: Products.length,
         itemBuilder: (BuildContext ctxt, int index) {
-          // return Text(PopMovs[index].title.toString());
           return Card(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 ListTile(
-                  // leading: const Icon(Icons.movie, size: 30),
-                  leading: Image.network(Products[index].gambar),
-                  // title: Text(PopMovs[index].title),
+                  leading: Image.network(
+                    'https://ubaya.xyz/flutter/160422065/project/images/produk/${Produks[index].id}.jpg',
+                    height: 200,
+                  ),
                   title: GestureDetector(
                     child: Text(Produks[index].nama),
                     onTap: () {
@@ -72,12 +71,11 @@ class _ProdukPenjualScreenState extends State<ProdukPenjual> {
                         MaterialPageRoute(
                           builder:
                               (context) =>
-                                  EditProduk(produkID: Produks[index].id),
+                                  DetailProdukSaya(produkID: Produks[index].id),
                         ),
                       );
                     },
                   ),
-                  // subtitle: Text(PopMovs[index].overview),
                   subtitle: Column(
                     children: [
                       Text(Produks[index].deskripsi),
@@ -91,6 +89,16 @@ class _ProdukPenjualScreenState extends State<ProdukPenjual> {
                       // ),
                     ],
                   ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) =>
+                                DetailProdukSaya(produkID: Produks[index].id),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -101,7 +109,6 @@ class _ProdukPenjualScreenState extends State<ProdukPenjual> {
       return const CircularProgressIndicator();
     }
   }
-
 
   @override
   void initState() {
