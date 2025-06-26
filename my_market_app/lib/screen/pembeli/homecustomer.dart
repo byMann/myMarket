@@ -3,11 +3,12 @@ import 'package:my_market_app/helper/cart.dart';
 import 'package:my_market_app/class/produk.dart';
 import 'package:my_market_app/helper/user_helper.dart';
 import 'package:my_market_app/screen/pembeli/akuncust.dart';
-import 'package:my_market_app/screen/pembeli/chatpembeli.dart';
+import 'package:my_market_app/screen/daftarchat.dart';
 import 'package:my_market_app/screen/pembeli/detailproduk.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:my_market_app/screen/chatroom.dart';
 
 class HomeCustomer extends StatefulWidget {
   const HomeCustomer({super.key});
@@ -20,6 +21,7 @@ class _HomeCustomerState extends State<HomeCustomer> {
   int _currentIndex = 0;
   List<Map<String, dynamic>> kategoris = [];
   String? selectedKategoriId;
+  String _emailuser = "";
 
   List<Produk> Ps = [];
   final dbHelper = DatabaseHelper.instance;
@@ -29,6 +31,13 @@ class _HomeCustomerState extends State<HomeCustomer> {
     super.initState();
     baca_data();
     loadKategori();
+    loadUserData();
+
+  }
+
+  void loadUserData() async {
+    _emailuser = await getUserEmail();
+    setState(() {});
   }
 
   void loadKategori() async {
@@ -150,7 +159,7 @@ class _HomeCustomerState extends State<HomeCustomer> {
                 return Card(
                   child: ListTile(
                     leading: Image.network(
-                      'http://ubaya.xyz/images/produk/${produk.id}.jpg',
+                      'https://ubaya.xyz/flutter/160422065/project/images/produk/${produk.id}.jpg',
                       height: 200,
                     ),
                     // : const Icon(Icons.shopping_bag),
@@ -203,7 +212,7 @@ class _HomeCustomerState extends State<HomeCustomer> {
   Widget build(BuildContext context) {
     final List<Widget> _screens = [
       buildListProduk(),
-      const ChatPembeli(),
+      const Daftarchat(),
       const AkunCust(),
     ];
 
@@ -230,15 +239,14 @@ class _HomeCustomerState extends State<HomeCustomer> {
 
   Drawer _buildDrawer(BuildContext context) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(color: Colors.deepPurple),
-            child: Text(
-              'Customer',
-              style: TextStyle(color: Colors.white, fontSize: 24),
-            ),
+      child: Column(
+        children: <Widget>[
+          UserAccountsDrawerHeader(
+            accountName: Text(_emailuser),
+            accountEmail: Text('Role: Pembeli'),
+            // currentAccountPicture: CircleAvatar(
+            //   backgroundImage: NetworkImage("https://i.pravatar.cc/150"),
+            // ),
           ),
           ListTile(
             leading: const Icon(Icons.shopping_cart),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_market_app/class/produk.dart';
 import 'package:intl/intl.dart';
+import 'package:my_market_app/screen/chatroom.dart';
 
 class DetailProduk extends StatefulWidget {
   final int produkID;
@@ -58,7 +59,7 @@ class _DetailProdukScreenState extends State<DetailProduk> {
                   children: [
                     if (_p!.id != null)
                       Image.network(
-                        'http://ubaya.xyz/images/produk/${_p!.id}.jpg',
+                        'https://ubaya.xyz/flutter/160422065/project/images/produk/${_p!.id}.jpg',
                         height: 200,
                       ),
                     const SizedBox(height: 10),
@@ -86,6 +87,22 @@ class _DetailProdukScreenState extends State<DetailProduk> {
                     Text(
                       "Email Penjual : " + _p!.nama_penjual.toString(),
                       style: const TextStyle(fontSize: 14),
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => ChatRoom(
+                                  produkID: _p!.id,
+                                  emailPenjual: _p!.nama_penjual,
+                                ),
+                          ),
+                        );
+                      },
+                      child: Text("Kirim Pesan"),
                     ),
                     const SizedBox(height: 10),
                     const Text("Kategori:", style: TextStyle(fontSize: 18)),

@@ -1,28 +1,25 @@
 class Pesan {
-  int id;
-  int sender_id;
-  int receiver_id;
-  String konten;
-  String gambar;
-  int produk_id;
+  final int id;
+  final int senderId;
+  final int receiverId;
+  final String konten;
+  final int produkId;
 
   Pesan({
     required this.id,
-    required this.sender_id,
-    required this.receiver_id,
+    required this.senderId,
+    required this.receiverId,
     required this.konten,
-    required this.gambar,
-    required this.produk_id,
+    required this.produkId,
   });
 
   factory Pesan.fromJson(Map<String, dynamic> json) {
     return Pesan(
-      sender_id: json['id_pesans'] as int,
-      receiver_id: json['receiver_id'] as int,
-      id: json['id_pesans'],
+      id: json['id'],
+      senderId: json['sender_id'],
+      receiverId: json['receiver_id'],
       konten: json['konten'],
-      gambar: json['gambar'],
-      produk_id: json['produks_id'],
+      produkId: json['produks_id'],
     );
   }
 }

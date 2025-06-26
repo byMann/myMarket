@@ -56,6 +56,7 @@ class _LoginState extends State<Login> {
         await saveUserSession(
           userId: json['id'].toString(), 
           role: json['role'],
+          email: json['email'].toString(),
         );
 
         if (json['role'] == 'penjual') {

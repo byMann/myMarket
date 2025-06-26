@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:my_market_app/helper/user_helper.dart';
+import 'package:my_market_app/screen/daftarchat.dart';
 import 'package:my_market_app/screen/penjual/akunpenjual.dart';
-import 'package:my_market_app/screen/penjual/chatpenjual.dart';
-import 'package:my_market_app/screen/penjual/kategoripenjual.dart';
 import 'package:my_market_app/screen/penjual/produkpenjual.dart';
-import 'package:my_market_app/screen/penjual/tambahproduk.dart';
 
 class HomePenjual extends StatefulWidget {
   const HomePenjual({super.key});
@@ -16,22 +13,22 @@ class HomePenjual extends StatefulWidget {
 
 class _HomePenjualState extends State<HomePenjual> {
   int _currentIndex = 0;
+  String _emailuser = "";
 
-  final List<Widget> _screens = [
-    ProdukPenjual(),
-    KategoriPenjual(),
-    AkunPenjual(),
-    ChatPenjual(),
-    TambahProduk(),
-  ];
+  final List<Widget> _screens = [ProdukPenjual(), Daftarchat(), AkunPenjual()];
 
-  final List<String> _titles = [
-    "Produk Saya",
-    "Kategori",
-    "Akun",
-    "Chat",
-    "Tambah Produk",
-  ];
+  final List<String> _titles = ["Produk Saya", "Chat", "Akun"];
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
+
+  void loadUserData() async {
+    _emailuser = await getUserEmail();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +38,7 @@ class _HomePenjualState extends State<HomePenjual> {
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        backgroundColor: Colors.purple,
+        backgroundColor: Colors.white,
         selectedItemColor: Colors.purple,
         unselectedItemColor: Colors.grey,
         onTap: (index) => setState(() => _currentIndex = index),
@@ -50,38 +47,31 @@ class _HomePenjualState extends State<HomePenjual> {
             icon: Icon(Icons.shopping_bag),
             label: "Produk",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.category),
-            label: "Kategori",
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Akun"),
           BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Chat"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Akun"),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, "tambahproduk");
+        },
+        backgroundColor: Colors.purple,
+        child: Icon(Icons.add),
+        foregroundColor: Colors.white,
       ),
     );
   }
 
   Drawer _buildDrawer(BuildContext context) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(color: Colors.deepPurple),
-            child: Text(
-              'Penjual',
-              style: TextStyle(color: Colors.white, fontSize: 24),
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.add),
-            title: Text("Tambah Produk"),
-            onTap: () => Navigator.pushNamed(context, "tambahproduk"),
-          ),
-          ListTile(
-            leading: const Icon(Icons.chat),
-            title: Text("Chat"),
-            onTap: () => Navigator.pushNamed(context, "chatpenjual"),
+      child: Column(
+        children: <Widget>[
+          UserAccountsDrawerHeader(
+            accountName: Text(_emailuser),
+            accountEmail: Text('Role: Penjual'),
+            // currentAccountPicture: CircleAvatar(
+            //   backgroundImage: NetworkImage("https://i.pravatar.cc/150"),
+            // ),
           ),
           ListTile(
             leading: const Icon(Icons.logout),
