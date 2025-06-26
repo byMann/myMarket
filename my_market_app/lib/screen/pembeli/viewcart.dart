@@ -154,13 +154,14 @@ class _ViewCartState extends State<ViewCart> {
     if (response.statusCode == 200) {
       Map json = jsonDecode(response.body);
       if (json['result'] == 'success') {
+        double _totalHarga = _hitungTotalHargaCheckout();
         dbHelper.emptyCart().then((value) {
           _bacaData();
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => Pembelian(
-                totalHarga: _hitungTotalHargaCheckout(),
+                totalHarga: _totalHarga,
               ),
             ),
           );

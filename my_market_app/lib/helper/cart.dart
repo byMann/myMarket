@@ -30,7 +30,7 @@ class DatabaseHelper {
       produk_id INTEGER NOT NULL,
       nama TEXT NOT NULL,
       jumlah INTEGER NOT NULL,
-      harga INTEGER NOT NULL,
+      harga INTEGER NOT NULL
      )
      ''');
   }

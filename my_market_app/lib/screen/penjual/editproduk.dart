@@ -141,19 +141,16 @@ class EditProdukState extends State<EditProduk> {
       },
     );
 
-    print("Response status: ${response.statusCode}");
     if (response.statusCode == 200) {
       Map json = jsonDecode(response.body);
       if (json['result'] == 'success') {
-        int produkID = json['id'];
 
         if (_imageBytes != null) {
-          uploadGambarProduk(produkID);
+          uploadGambarProduk(widget.produkID);
         }
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Sukses mengubah Data')));
-        Navigator.push(
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Sukses mengubah Data')));
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => ProdukPenjual()),
         );

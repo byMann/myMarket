@@ -88,7 +88,7 @@ class _HomeCustomerState extends State<HomeCustomer> {
       );
 
       final json = jsonDecode(response.body);
-      print("DEBUG response JSON: $json");
+      // print("DEBUG response JSON: $json");
 
       if (json['result'] == 'success') {
         int stokTersedia = int.parse(json['stok'].toString());
