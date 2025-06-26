@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_market_app/class/produk.dart';
 import 'package:my_market_app/helper/user_helper.dart' as user_helper;
-import 'package:my_market_app/screen/chatroom.dart';
 import 'package:my_market_app/screen/penjual/detailproduksaya.dart';
 
 class ProdukPenjual extends StatefulWidget {

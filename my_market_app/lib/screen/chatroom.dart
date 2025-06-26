@@ -8,7 +8,6 @@ import 'package:my_market_app/helper/user_helper.dart';
 
 class ChatRoom extends StatefulWidget {
   final int produkID;
-
   final String emailPenjual;
 
   const ChatRoom({
@@ -118,11 +117,6 @@ class _ChatRoomScreenState extends State<ChatRoom> {
         'produk_id': widget.produkID.toString(),
       },
     );
-    print("Response body: ${response.body}");
-    print("sender_id: $senderId");
-    print("email_sender: ${widget.emailPenjual}");
-    print("pesan: ${_pesanController.text}");
-    print("produk_id: ${widget.produkID.toString()}");
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> json = jsonDecode(response.body);

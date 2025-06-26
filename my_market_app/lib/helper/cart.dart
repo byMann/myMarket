@@ -47,6 +47,13 @@ class DatabaseHelper {
     return null;
   }
 
+  Future<void> emptySelectedCart(Set<int> produkIds) async {
+    final db = await database;
+    for (var id in produkIds) {
+      await db?.delete('cart', where: 'produk_id = ?', whereArgs: [id]);
+    }
+  }
+
   Future<void> addCart(Map<String, dynamic> row) async {
     final db = await database;
     // cek kalau produk yg sama udah ada di cart

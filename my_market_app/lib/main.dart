@@ -10,14 +10,13 @@ import 'package:my_market_app/screen/register.dart';
 
 // Pembeli
 import 'package:my_market_app/screen/pembeli/homecustomer.dart';
-import 'package:my_market_app/screen/pembeli/pembelian.dart';
-import 'package:my_market_app/screen/daftarchat.dart';
 
 // Penjual
 import 'package:my_market_app/screen/penjual/homepenjual.dart';
 import 'package:my_market_app/screen/penjual/produkpenjual.dart';
-import 'package:my_market_app/screen/penjual/kategoripenjual.dart';
 import 'package:my_market_app/screen/penjual/akunpenjual.dart';
+
+import 'package:my_market_app/screen/daftarchat.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,16 +58,15 @@ class MyApp extends StatelessWidget {
         // Pembeli
         'homecustomer': (context) => const HomeCustomer(),
         'akunpembeli': (context) => const AkunCust(),
-        'pembelian': (context) => const Pembelian(),
-        'daftarchat': (context) => const Daftarchat(),
         'cart': (context) => const ViewCart(),
 
         // Penjual
         'homepenjual': (context) => const HomePenjual(),
         'produk_penjual': (context) => const ProdukPenjual(),
-        'kategori_penjual': (context) => const KategoriPenjual(),
         'akunpenjual': (context) => const AkunPenjual(),
         'tambahproduk': (context) => const TambahProduk(),
+
+        'daftarchat': (context) => const Daftarchat(),
       },
     );
   }
