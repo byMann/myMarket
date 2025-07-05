@@ -73,6 +73,24 @@ class _HomePenjualState extends State<HomePenjual> {
             //   backgroundImage: NetworkImage("https://i.pravatar.cc/150"),
             // ),
           ),
+          ExpansionTile(
+            leading: Icon(Icons.settings),
+            title: Text('Settings'),
+            children: [
+              ListTile(
+                title: Text('Account Information'),
+                onTap: () {
+                  Navigator.pushNamed(context, 'info-akun');
+                },
+              ),
+              ListTile(
+                title: Text('Change Password'),
+                onTap: () {
+                  Navigator.pushNamed(context, 'change-password');
+                },
+              ),
+            ],
+          ),
           ListTile(
             leading: const Icon(Icons.logout),
             title: Text("Logout"),

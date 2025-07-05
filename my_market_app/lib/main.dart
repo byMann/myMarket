@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_market_app/helper/user_helper.dart' as user_helper;
+import 'package:my_market_app/screen/ChangePass.dart';
+import 'package:my_market_app/screen/InfoAkun.dart';
 import 'package:my_market_app/screen/pembeli/akuncust.dart';
 import 'package:my_market_app/screen/pembeli/viewcart.dart';
 import 'package:my_market_app/screen/penjual/tambahproduk.dart';
@@ -67,6 +69,8 @@ class MyApp extends StatelessWidget {
         'tambahproduk': (context) => const TambahProduk(),
 
         'daftarchat': (context) => const Daftarchat(),
+        'info-akun': (context) => const InfoAkun(),
+        'change-password': (context) => const ChangePass(),
       },
     );
   }

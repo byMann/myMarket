@@ -31,7 +31,6 @@ class _HomeCustomerState extends State<HomeCustomer> {
     baca_data();
     loadKategori();
     loadUserData();
-
   }
 
   void loadUserData() async {
@@ -251,6 +250,24 @@ class _HomeCustomerState extends State<HomeCustomer> {
             leading: const Icon(Icons.shopping_cart),
             title: const Text("Cart"),
             onTap: () => Navigator.pushNamed(context, "cart"),
+          ),
+          ExpansionTile(
+            leading: Icon(Icons.settings),
+            title: Text('Settings'),
+            children: [
+              ListTile(
+                title: Text('Account Information'),
+                onTap: () {
+                  Navigator.pushNamed(context, 'info-akun');
+                },
+              ),
+              ListTile(
+                title: Text('Change Password'),
+                onTap: () {
+                  Navigator.pushNamed(context, 'change-password');
+                },
+              ),
+            ],
           ),
           ListTile(
             leading: const Icon(Icons.logout),
