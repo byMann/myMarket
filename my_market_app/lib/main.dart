@@ -3,6 +3,7 @@ import 'package:my_market_app/helper/user_helper.dart' as user_helper;
 import 'package:my_market_app/screen/ChangePass.dart';
 import 'package:my_market_app/screen/InfoAkun.dart';
 import 'package:my_market_app/screen/pembeli/akuncust.dart';
+import 'package:my_market_app/screen/pembeli/list-pembelian.dart';
 import 'package:my_market_app/screen/pembeli/viewcart.dart';
 import 'package:my_market_app/screen/penjual/tambahproduk.dart';
 
@@ -19,9 +20,13 @@ import 'package:my_market_app/screen/penjual/produkpenjual.dart';
 import 'package:my_market_app/screen/penjual/akunpenjual.dart';
 
 import 'package:my_market_app/screen/daftarchat.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
+  print('All loaded env vars:');
+  dotenv.env.forEach((k, v) => print('$k = $v'));
 
   bool isLoggedIn = await user_helper.isLoggedIn();
   String role = await user_helper.getUserRole();
@@ -61,6 +66,7 @@ class MyApp extends StatelessWidget {
         'homecustomer': (context) => const HomeCustomer(),
         'akunpembeli': (context) => const AkunCust(),
         'cart': (context) => const ViewCart(),
+        'listpembelian': (context) => const ListPembelian(),
 
         // Penjual
         'homepenjual': (context) => const HomePenjual(),

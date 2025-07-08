@@ -251,6 +251,13 @@ class _HomeCustomerState extends State<HomeCustomer> {
             title: const Text("Cart"),
             onTap: () => Navigator.pushNamed(context, "cart"),
           ),
+          ListTile(
+            leading: const Icon(Icons.shopping_basket),
+            title: const Text("Orders"),
+            onTap: () {
+              Navigator.pushNamed(context, 'listpembelian');
+            },
+          ),
           ExpansionTile(
             leading: Icon(Icons.settings),
             title: Text('Settings'),

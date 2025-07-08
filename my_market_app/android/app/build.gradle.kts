@@ -8,7 +8,8 @@ plugins {
 android {
     namespace = "com.example.my_market_app"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+//    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -17,6 +18,10 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     defaultConfig {
@@ -30,6 +35,25 @@ android {
         versionName = flutter.versionName
     }
 
+//    productFlavors{
+//        sandbox{
+//            dimension = "mode"
+//            resValue "string", "app_name", "My Market"
+//            buildConfigField "String", "MERCHANT_BASE_URL", "https://golang-midtrans.canonflow.my.id/midtrans"
+//            buildConfigField "String", "MERCHANT_CLIENT_KEY", "\"Mid-client-IWUDW9VgbGkHu_Qn\""
+//        }
+//    }
+
+    flavorDimensions += "mode"
+    productFlavors {
+        create("sandbox") {
+            dimension = "mode"
+            resValue("string", "app_name", "My Market")
+            buildConfigField("String", "MERCHANT_BASE_URL", "\"https://golang-midtrans.canonflow.my.id/midtrans\"")
+            buildConfigField("String", "MERCHANT_CLIENT_KEY", "\"Mid-client-IWUDW9VgbGkHu_Qn\"")
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
@@ -41,4 +65,10 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // For using the Midtrans Sandbox
+//    implementation 'com.midtrans:uikit:2.0.0-SANDBOX' // change the number to the latest version
+    implementation("com.midtrans:uikit:2.0.0-SANDBOX")
 }
