@@ -248,8 +248,9 @@ class _ViewCartState extends State<ViewCart> {
       if (selectedProdukIds.contains(produkId)) {
         int jumlah = item['jumlah'];
         int harga = item['harga'];
+        int temp = jumlah * harga;
         total += jumlah * harga;
-        items += "$produkId,$jumlah,$total|";
+        items += "$produkId,$jumlah,$temp|";
       }
     });
 

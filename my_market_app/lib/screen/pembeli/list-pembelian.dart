@@ -18,6 +18,7 @@ class ListPembelian extends StatefulWidget {
 
 class _ListPembelianState extends State<ListPembelian> {
   List<Pembelian> listPembelian = [];
+  List<String> orderId = [];
 
   void loadOrders() async {
     try {
@@ -35,6 +36,7 @@ class _ListPembelianState extends State<ListPembelian> {
         if (json['result'] == 'success') {
           setState(() {
             listPembelian.clear();
+            orderId.clear();
             for (var item in json['data']) {
               listPembelian.add(Pembelian.fromJson(item));
             }
@@ -59,13 +61,17 @@ class _ListPembelianState extends State<ListPembelian> {
       itemCount: pembelians.length,
       itemBuilder: (context, index) {
         final pembelian = pembelians[index];
-
+        bool showPaymentUrl = false;
+        if (!orderId.contains(pembelian.order_id)) {
+          orderId.add(pembelian.order_id!);
+          showPaymentUrl = true;
+        }
         return Card(
           margin: const EdgeInsets.all(10),
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 6, horizontal: 10),
             child: ListTile(
-              title: Text('ID: ${pembelian.id} - Status: ${pembelian.status}'),
+              title: Text('ID: ${pembelian.order_id} - Status: ${pembelian.status}'),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -86,7 +92,7 @@ class _ListPembelianState extends State<ListPembelian> {
                       },
                       child: const Text('Ulangi Pembayaran'),
                     ),
-                  if (pembelian.status == 'pending')
+                  if (pembelian.status == 'pending' && showPaymentUrl)
                     TextField(
                       controller: TextEditingController(
                         text: "https://app.sandbox.midtrans.com/snap/v4/redirection/" + pembelian.snap_token!
