@@ -44,15 +44,15 @@ android {
 //        }
 //    }
 
-    flavorDimensions += "mode"
-    productFlavors {
-        create("sandbox") {
-            dimension = "mode"
-            resValue("string", "app_name", "My Market")
-            buildConfigField("String", "MERCHANT_BASE_URL", "\"https://golang-midtrans.canonflow.my.id/midtrans\"")
-            buildConfigField("String", "MERCHANT_CLIENT_KEY", "\"Mid-client-IWUDW9VgbGkHu_Qn\"")
-        }
-    }
+//    flavorDimensions += "mode"
+//    productFlavors {
+//        create("sandbox") {
+//            dimension = "mode"
+//            resValue("string", "app_name", "My Market")
+//            buildConfigField("String", "MERCHANT_BASE_URL", "\"https://golang-midtrans.canonflow.my.id/midtrans\"")
+//            buildConfigField("String", "MERCHANT_CLIENT_KEY", "\"Mid-client-IWUDW9VgbGkHu_Qn\"")
+//        }
+//    }
 
     buildTypes {
         release {

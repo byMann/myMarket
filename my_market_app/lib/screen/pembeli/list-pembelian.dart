@@ -6,6 +6,7 @@ import 'package:my_market_app/class/pembelian.dart';
 import 'package:my_market_app/helper/cart.dart';
 import 'package:intl/intl.dart';
 import 'package:my_market_app/helper/user_helper.dart' as user_helper;
+import 'package:url_launcher/url_launcher.dart';
 
 class ListPembelian extends StatefulWidget {
   const ListPembelian({super.key});
@@ -44,6 +45,14 @@ class _ListPembelianState extends State<ListPembelian> {
     }
   }
 
+  Future<void> _launchUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      print("ERROR LAUNCH");
+      throw 'Could not launch $url';
+    }
+  }
+
   Widget itemPembelian(List<Pembelian> pembelians) {
     return ListView.builder(
       itemCount: pembelians.length,
@@ -78,9 +87,10 @@ class _ListPembelianState extends State<ListPembelian> {
                     ),
                   if (pembelian.status == 'pending')
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         // TODO: Call your payNow() function here
                         print('Pay Now for ID ${pembelian.id}');
+                        await _launchUrl("https://app.sandbox.midtrans.com/snap/v4/redirection/" + pembelian.snap_token!);
                       },
                       child: const Text('Bayar Sekarang'),
                     ),
