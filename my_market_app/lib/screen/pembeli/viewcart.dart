@@ -227,7 +227,7 @@ class _ViewCartState extends State<ViewCart> {
   }
 
   Future<void> _submit() async {
-    if (!isMidtransReady || _midtrans == null) {
+    if (!isMidtransReady) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Midtrans belum siap. Coba beberapa saat lagi.')),
       );
@@ -289,6 +289,7 @@ class _ViewCartState extends State<ViewCart> {
 
     // ===== Mulai pembayaran =====
     // Simpan di DB, trus bayar
+    print(items);
 
     final checkoutResponse = await http.post(
       Uri.parse("https://ubaya.xyz/flutter/160422065/project/checkout.php"),
@@ -320,7 +321,17 @@ class _ViewCartState extends State<ViewCart> {
         // );
         print("START PAYMENT");
         print(snapToken);
-        startMidtransPayment(snapToken!);
+        // startMidtransPayment(snapToken!);
+        dbHelper.emptySelectedCart(selectedProdukIds).then((value) {
+          selectedProdukIds.clear();
+          _bacaData();
+          // Navigator.pushAndRemoveUntil(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => ListPembelian()),
+          //   ModalRoute.withName("/homecustomer")
+          // );
+          Navigator.pushNamed(context, "listpembelian");
+        });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: ${json['message']}')),

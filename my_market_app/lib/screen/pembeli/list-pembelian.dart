@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_market_app/class/pembelian.dart';
 import 'package:my_market_app/helper/cart.dart';
@@ -86,14 +87,34 @@ class _ListPembelianState extends State<ListPembelian> {
                       child: const Text('Ulangi Pembayaran'),
                     ),
                   if (pembelian.status == 'pending')
-                    ElevatedButton(
-                      onPressed: () async {
-                        // TODO: Call your payNow() function here
-                        print('Pay Now for ID ${pembelian.id}');
-                        await _launchUrl("https://app.sandbox.midtrans.com/snap/v4/redirection/" + pembelian.snap_token!);
-                      },
-                      child: const Text('Bayar Sekarang'),
-                    ),
+                    TextField(
+                      controller: TextEditingController(
+                        text: "https://app.sandbox.midtrans.com/snap/v4/redirection/" + pembelian.snap_token!
+                      ),
+                      readOnly: true,
+                      enableInteractiveSelection: true,
+                      decoration: InputDecoration(
+                        labelText: 'URL',
+                        border: OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.copy),
+                          onPressed: () {
+                            Clipboard.setData(ClipboardData(text: "https://app.sandbox.midtrans.com/snap/v4/redirection/" + pembelian.snap_token!));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Copied to clipboard')),
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                    // ElevatedButton(
+                    //   onPressed: () async {
+                    //     // TODO: Call your payNow() function here
+                    //     print('Pay Now for ID ${pembelian.id}');
+                    //     await _launchUrl("https://app.sandbox.midtrans.com/snap/v4/redirection/" + pembelian.snap_token!);
+                    //   },
+                    //   child: const Text('Bayar Sekarang'),
+                    // ),
                 ],
               ),
             ),
